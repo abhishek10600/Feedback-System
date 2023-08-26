@@ -6,8 +6,10 @@ import FeedbackFormPopup from "./components/FeedbackFormPopup";
 import Button from "./components/Button";
 import FeedbackItemPopup from "./components/FeedbackItemPopup";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 
 export default function Home() {
+  const { data: session } = useSession();
   const [showFeedbackPopupForm, setShowFeedbackPopupForm] = useState(false);
   const [showFeedbackPopupItem, setShowFeedbackPopupItem] = useState(null);
   const [feedbacks, setFeedbacks] = useState([]);
@@ -17,11 +19,19 @@ export default function Home() {
     setFeedbacks(res.data);
 
   }
+
   useEffect(() => {
     getFeedbackData();
   }, [])
 
-
+  useEffect(() => {
+    if (session?.user?.email) {
+      const feedbackId = localStorage.getItem("vote_after_login");
+      if (feedbackId) {
+        alert(feedbackId);
+      }
+    }
+  }, [session?.user?.email])
 
   const openFeedbackPopupForm = () => {
     setShowFeedbackPopupForm(true);
@@ -31,6 +41,7 @@ export default function Home() {
   }
   return (
     <main className="bg-white md:max-w-2xl mx-auto md:shadow-lg md:rounded-lg md:mt-8 overflow-hidden">
+      <div>{session?.user?.email || 'not logged in'}</div>
       <div className="bg-gradient-to-r from-cyan-400 to-blue-400 p-8">
         <h1 className="font-bold text-xl">Feedback System</h1>
         <p className="text-opacity-90 text-slate-700">Help me decide what I should build next or help me improve!</p>
