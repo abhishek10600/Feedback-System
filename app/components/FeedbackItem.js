@@ -19,6 +19,11 @@ const FeedbackItem = ({ onOpen, _id, title, description, votesCount }) => {
         ev.preventDefault();
         signIn("google");
     }
+    const handleLogoutButtonClick = (ev) => {
+        ev.stopPropagation();
+        ev.preventDefault();
+        signOut();
+    }
     return (
         <a href="" onClick={e => { e.preventDefault(); onOpen(); }} className="my-8 flex gap-8 items-center">
             <div className="flex-grow">
@@ -30,6 +35,9 @@ const FeedbackItem = ({ onOpen, _id, title, description, votesCount }) => {
                     <Popup setShow={setShowLoginPopup} title={"You want to vote?"}>
                         <div className="p-4">
                             <Button primary onClick={handleGoogleLoginButtonClick}>Login with Google</Button>
+                        </div>
+                        <div className="p-4">
+                            <Button primary onClick={handleLogoutButtonClick}>Logout</Button>
                         </div>
                     </Popup>
                 )}

@@ -28,7 +28,11 @@ export default function Home() {
     if (session?.user?.email) {
       const feedbackId = localStorage.getItem("vote_after_login");
       if (feedbackId) {
-        alert(feedbackId);
+        //saving vote in the database
+        const res = axios.post("/api/vote", { feedbackId })
+        //removing item from local storage
+        localStorage.removeItem("vote_after_login");
+
       }
     }
   }, [session?.user?.email])
