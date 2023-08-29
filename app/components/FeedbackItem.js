@@ -1,17 +1,22 @@
 import React, { useState } from 'react'
 import Popup from './Popup';
 import Button from "./Button";
-import { signIn, signOut } from 'next-auth/react';
+import { signIn, signOut, useSession } from 'next-auth/react';
+import axios from 'axios';
 
-const FeedbackItem = ({ onOpen, _id, title, description, votesCount }) => {
+const FeedbackItem = ({ onOpen, _id, title, description, votes, onVotesChange }) => {
+    const { data: session } = useSession();
     const [showLoginPopup, setShowLoginPopup] = useState(false);
-    const isLoggedIn = false;
-    const handleVoteButtonClick = (ev) => {
+    const isLoggedIn = !!session?.user?.email;
+    const handleVoteButtonClick = async (ev) => {
         ev.stopPropagation();
         ev.preventDefault();
         if (!isLoggedIn) {
             setShowLoginPopup(true);
             localStorage.setItem("vote_after_login", _id);
+        } else {
+            await axios.post("/api/vote", { feedbackId: _id })
+            onVotesChange();
         }
     }
     const handleGoogleLoginButtonClick = (ev) => {
@@ -45,7 +50,7 @@ const FeedbackItem = ({ onOpen, _id, title, description, votesCount }) => {
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
                     </svg>
-                    {votesCount || 0}
+                    {votes?.length || 0}
                 </button>
             </div>
         </a>

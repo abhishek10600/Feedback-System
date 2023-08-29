@@ -5,6 +5,16 @@ import Vote from "@/app/models/Vote";
 
 connect();
 
+export const GET = async (request) => {
+    const url = new URL(request.url);
+    if (url.searchParams.get("feedbackIds")) {
+        const feedbackIds = url.searchParams.get("feedbackIds").split(",");
+        const votesDocs = await Vote.find({ feedbackId: feedbackIds });
+        return Response.json(votesDocs);
+    }
+    return Response.json([]);
+}
+
 export const POST = async (request) => {
     const { feedbackId } = await request.json();
     const session = await getServerSession(authOptions);

@@ -13,17 +13,32 @@ export default function Home() {
   const [showFeedbackPopupForm, setShowFeedbackPopupForm] = useState(false);
   const [showFeedbackPopupItem, setShowFeedbackPopupItem] = useState(null);
   const [feedbacks, setFeedbacks] = useState([]);
+  const [votes, setVotes] = useState([]);
 
+  //function to get the feedbacks
   const getFeedbackData = async () => {
     const res = await axios.get('/api/feedback');
     setFeedbacks(res.data);
 
   }
 
+  //calling the function getFeedbackData() that gets the data when the page loads
   useEffect(() => {
     getFeedbackData();
   }, [])
 
+  const fetchVotes = async () => {
+    const ids = feedbacks.map(feedback => feedback._id);
+    const res = await axios.get("/api/vote/?feedbackIds=" + ids.join(","))
+    setVotes(res.data);
+  }
+
+  //calling the function getFeedbackVotes() when the page loads.
+  useEffect(() => {
+    fetchVotes();
+  }, [feedbacks]);
+
+  //allowing users to cast vote if they are logged in or else ask them to login first
   useEffect(() => {
     if (session?.user?.email) {
       const feedbackId = localStorage.getItem("vote_after_login");
@@ -59,7 +74,13 @@ export default function Home() {
       <div className="px-8">
         {
           feedbacks.map(feedback => (
-            <FeedbackItem key={feedback.id} {...feedback} onOpen={() => openFeedbackPopupItem(feedback)} />
+            <FeedbackItem
+              key={feedback.id}
+              {...feedback}
+              onVotesChange={fetchVotes}
+              votes={votes?.filter(v => v.feedbackId.toString() === feedback._id.toString())}
+              onOpen={() => openFeedbackPopupItem(feedback)}
+            />
           ))
         }
         {showFeedbackPopupForm && (
