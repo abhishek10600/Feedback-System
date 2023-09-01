@@ -2,11 +2,10 @@ import React, { useState } from 'react'
 import Popup from './Popup'
 import Button from './Button'
 import axios from 'axios';
-import Image from 'next/image';
-import Trash from './icons/Trash';
 import { MoonLoader } from 'react-spinners';
+import Attachment from './Attachment';
 
-const FeedbackFormPopup = ({ setShow }) => {
+const FeedbackFormPopup = ({ setShow, onCreate }) => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [uploads, setUploads] = useState([]);
@@ -16,6 +15,7 @@ const FeedbackFormPopup = ({ setShow }) => {
         const res = await axios.post("/api/feedback", { title: title, description: description, uploads: uploads });
         if (res.data.success === true) {
             setShow(false);
+            onCreate();
         }
     }
     const handleAttachFilesInputChange = async (ev) => {
@@ -33,6 +33,7 @@ const FeedbackFormPopup = ({ setShow }) => {
         setIsUploading(false);
     }
     const removeFileUploadButtonClick = (ev, link) => {
+        ev.stopPropagation();
         ev.preventDefault();
         setUploads((currentUploads) => {
             return currentUploads.filter((val) => val !== link);
@@ -60,18 +61,11 @@ const FeedbackFormPopup = ({ setShow }) => {
                         <label className="block mt-4 mb-1 text-slate-700">Files</label>
                         <div className="flex gap-3">
                             {uploads.map(link => (
-                                <a href={link} target="_blank" className="h-16 relative">
-                                    <button className="-right-2 -top-2 absolute bg-red-400 p-1 rounded-md text-white" onClick={(ev) => removeFileUploadButtonClick(ev, link)}>
-                                        <Trash />
-                                    </button>
-                                    {link.endsWith('.jpg') || link.endsWith('.png') ? (
-                                        <Image className="rounded-md" width="150" height="150" src={link} alt="" />
-                                    ) : (
-                                        <div>
-                                            <p className="text-red-500">Not an image</p>
-                                        </div>
-                                    )}
-                                </a>
+                                <Attachment
+                                    link={link}
+                                    showRemoveButton={true}
+                                    removeFileUploadButtonClick={(ev, link) => removeFileUploadButtonClick}
+                                />
                             ))
                             }
                         </div>

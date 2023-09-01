@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Popup from './Popup';
 import Button from "./Button";
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import axios from 'axios';
 import { MoonLoader } from 'react-spinners';
 
@@ -28,12 +28,6 @@ const FeedbackItem = ({ onOpen, _id, title, description, votes, onVotesChange })
         ev.preventDefault();
         signIn("google");
     }
-    const handleLogoutButtonClick = (ev) => {
-        ev.stopPropagation();
-        ev.preventDefault();
-        signOut();
-    }
-
     const didIVote = !!votes.find(v => v.userEmail === session?.user?.email)
 
     return (
@@ -47,9 +41,6 @@ const FeedbackItem = ({ onOpen, _id, title, description, votes, onVotesChange })
                     <Popup setShow={setShowLoginPopup} title={"You want to vote?"}>
                         <div className="p-4">
                             <Button primary onClick={handleGoogleLoginButtonClick}>Login with Google</Button>
-                        </div>
-                        <div className="p-4">
-                            <Button primary onClick={handleLogoutButtonClick}>Logout</Button>
                         </div>
                     </Popup>
                 )}

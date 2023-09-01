@@ -5,8 +5,9 @@ import FeedbackItemPopupComments from './FeedbackItemPopupComments'
 import { useSession } from 'next-auth/react'
 import axios from 'axios'
 import { MoonLoader } from 'react-spinners'
+import Attachment from './Attachment'
 
-const FeedbackItemPopup = ({ _id, title, description, setShow, votes, onVotesChange }) => {
+const FeedbackItemPopup = ({ _id, title, description, setShow, votes, onVotesChange, uploads }) => {
     const { data: session } = useSession();
     const [votesLoading, setVotesLoading] = useState(false);
     const isLoggedIn = !!session?.user?.email;
@@ -29,6 +30,16 @@ const FeedbackItemPopup = ({ _id, title, description, setShow, votes, onVotesCha
             <div className="p-8 pb-2">
                 <h2 className="text-lg font-bold mb-2">{title}</h2>
                 <p className="text-gray-600 text-justify">{description}</p>
+                {uploads?.length > 0 && (
+                    <div>
+                        <p>Attachments</p>
+                        <div className="flex gap-6 my-4">
+                            {uploads.map(link => (
+                                <Attachment link={link} />
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
             <div className="flex justify-end px-8 py-2 border-b">
                 <Button primary onClick={handleVoteButtonClick}>

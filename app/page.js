@@ -7,6 +7,7 @@ import Button from "./components/Button";
 import FeedbackItemPopup from "./components/FeedbackItemPopup";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import Navbar from "./components/Navbar";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -63,7 +64,6 @@ export default function Home() {
   }
   return (
     <main className="bg-white md:max-w-2xl mx-auto md:shadow-lg md:rounded-lg md:mt-8 overflow-hidden">
-      <div>{session?.user?.email || 'not logged in'}</div>
       <div className="bg-gradient-to-r from-cyan-400 to-blue-400 p-8">
         <h1 className="font-bold text-xl">Feedback System</h1>
         <p className="text-opacity-90 text-slate-700">Help me decide what I should build next or help me improve!</p>
@@ -87,7 +87,10 @@ export default function Home() {
           ))
         }
         {showFeedbackPopupForm && (
-          <FeedbackFormPopup setShow={setShowFeedbackPopupForm} />
+          <FeedbackFormPopup
+            setShow={setShowFeedbackPopupForm}
+            onCreate={getFeedbackData}
+          />
         )}
         {
           showFeedbackPopupItem && (
@@ -101,5 +104,6 @@ export default function Home() {
         }
       </div>
     </main>
+
   )
 }
