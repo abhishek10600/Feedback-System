@@ -10,7 +10,7 @@ const Attachment = ({ link, showRemoveButton = false, removeFileUploadButtonClic
                     <Trash />
                 </button>
             )}
-            {link.endsWith('.jpg') || link.endsWith('.png') ? (
+            {link.endsWith('.jpg') || link.endsWith('.jpeg') || link.endsWith('.png') ? (
                 <Image className="rounded-md" width="150" height="150" src={link} alt="" />
             ) : (
                 <div>
