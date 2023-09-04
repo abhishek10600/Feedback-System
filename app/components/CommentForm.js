@@ -2,8 +2,9 @@ import React, { useState } from 'react'
 import Button from './Button';
 import AttachFilesButton from './AttachFilesButton';
 import Attachment from './Attachment';
+import axios from 'axios';
 
-const CommentForm = () => {
+const CommentForm = ({ feedbackId }) => {
     const [commentText, setCommentText] = useState("");
     const [uploads, setUploads] = useState([]);
     const addUploads = (newLinks) => {
@@ -13,6 +14,16 @@ const CommentForm = () => {
         ev.preventDefault();
         ev.stopPropagation();
         setUploads(prevLinks => prevLinks.filter(link => link != linkToRemove));
+    }
+    const handleCommentButtonClick = async (ev) => {
+        ev.preventDefault();
+        await axios.post("/api/comment", {
+            text: commentText,
+            uploads,
+            feedbackId
+        });
+        setCommentText("");
+        setUploads([]);
     }
     return (
         <form>
@@ -35,7 +46,7 @@ const CommentForm = () => {
             )}
             <div className="flex justify-end gap-2 mt-2">
                 <AttachFilesButton onNewFiles={addUploads} />
-                <Button primary disabled={commentText === ""}>Comment</Button>
+                <Button onClick={handleCommentButtonClick} primary disabled={commentText === ""}>Comment</Button>
             </div>
         </form>
     )

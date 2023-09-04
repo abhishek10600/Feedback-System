@@ -3,7 +3,7 @@ import Button from './Button'
 import Avatar from './Avatar';
 import CommentForm from './CommentForm';
 
-const FeedbackItemPopupComments = () => {
+const FeedbackItemPopupComments = ({ feedbackId }) => {
     return (
         <div className="p-8">
             <div className="flex gap-4 mb-8">
@@ -13,7 +13,7 @@ const FeedbackItemPopupComments = () => {
                     <div className="text-gray-400 mt-2 text-sm">Abhishek Sharma &middot; a few seconds ago</div>
                 </div>
             </div>
-            <CommentForm />
+            <CommentForm feedbackId={feedbackId} />
         </div>
     )
 }

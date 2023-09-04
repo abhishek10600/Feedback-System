@@ -66,7 +66,7 @@ const FeedbackItemPopup = ({ _id, title, description, setShow, votes, onVotesCha
                 </Button>
             </div>
             <div>
-                <FeedbackItemPopupComments />
+                <FeedbackItemPopupComments feedbackId={_id} />
             </div>
         </Popup>
     )
