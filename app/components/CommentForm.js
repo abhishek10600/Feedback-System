@@ -4,7 +4,7 @@ import AttachFilesButton from './AttachFilesButton';
 import Attachment from './Attachment';
 import axios from 'axios';
 
-const CommentForm = ({ feedbackId }) => {
+const CommentForm = ({ feedbackId, onPost }) => {
     const [commentText, setCommentText] = useState("");
     const [uploads, setUploads] = useState([]);
     const addUploads = (newLinks) => {
@@ -24,6 +24,7 @@ const CommentForm = ({ feedbackId }) => {
         });
         setCommentText("");
         setUploads([]);
+        onPost();
     }
     return (
         <form>
@@ -33,7 +34,7 @@ const CommentForm = ({ feedbackId }) => {
                     <div className="text-sm text-gray-600 my-3">Files:</div>
                     <div className="flex gap-3">
                         {uploads.map(link => (
-                            <div>
+                            <div key={link}>
                                 <Attachment
                                     link={link}
                                     showRemoveButton={true}

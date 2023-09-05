@@ -35,7 +35,7 @@ const FeedbackItemPopup = ({ _id, title, description, setShow, votes, onVotesCha
                         <p>Attachments</p>
                         <div className="flex gap-6 my-4">
                             {uploads.map(link => (
-                                <Attachment link={link} />
+                                <Attachment key={link} link={link} />
                             ))}
                         </div>
                     </div>

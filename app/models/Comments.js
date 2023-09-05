@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import User from "./User";
 
 const commentSchema = new mongoose.Schema(
     {
@@ -8,10 +9,18 @@ const commentSchema = new mongoose.Schema(
         feedbackId: { type: mongoose.Types.ObjectId, required: true }
     },
     {
-        timestamps: true
+        timestamps: true,
+        toObject: { virtuals: true },
+        toJSON: { virtuals: true }
     }
 );
 
-const Comment = mongoose.model.Comment || mongoose.model("Comment", commentSchema);
+commentSchema.virtual("user", {
+    ref: 'User',
+    localField: "userEmail",
+    foreignField: "email",
+    justOne: true,
+});
 
+const Comment = mongoose.models?.Comment || mongoose.model("Comment", commentSchema);
 export default Comment;
